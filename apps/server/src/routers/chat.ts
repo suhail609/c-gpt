@@ -6,6 +6,7 @@ import {
 } from "../services/conversation.service";
 import openai from "../config/openai";
 import { isAuthorizedUserProcedure } from "../middleware/auth.middleware";
+import { getUserChats, sendMessage } from "../services/chat.service";
 
 /**
  * PROCEDURES:
@@ -24,10 +25,18 @@ export const chatRouter = router({
     .input(z.object({ user: z.string(), message: z.string() }))
     // .mutation((req) => req.ctx)
     .mutation((req) => {
-      console.log(req);
-      // req.input;
-      // req.ctx;
-      console.log("some mutation");
+      /**
+       * create a new entry to chat collection with userId and message
+       * ask chatgpt for the response
+       * save the response to the collection
+       */
+    }),
+  sendMessage: isAuthorizedUserProcedure
+    .input(z.object({ chatId: z.string().optional(), content: z.string() }))
+    .mutation(async (req) => {
+      const { chatId, content } = req.input;
+      const response = await sendMessage({ chatId, content });
+      return response;
     }),
   // .mutation(async ({ input }) => {
   //   const { user, message } = input;
@@ -48,6 +57,15 @@ export const chatRouter = router({
 
   //   return { response: assistantReply };
   // }),
+
+  getUserChats: isAuthorizedUserProcedure.query(async (req) => {
+    const { id } = req.ctx.user;
+    return getUserChats({ userId: id });
+  }),
+
+  getChatMessages: isAuthorizedUserProcedure
+    .input(z.object({ chatId: z.string() }))
+    .query(async (req) => {}),
 
   getChat: isAuthorizedUserProcedure
     .input(z.object({ user: z.string() }))
