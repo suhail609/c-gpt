@@ -13,6 +13,7 @@ export const router = t.router;
 export const procedure = t.procedure;
 
 //TODO: move trpc intialization to a separate file for better organization and maintainability
+// move initialization to config folder and move the route to route folder with index file
 
 const isAuthenticated = t.middleware(({ ctx, next }) => {
   //   const authHeader = ctx.req.headers.authorization;

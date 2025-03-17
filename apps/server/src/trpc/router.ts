@@ -84,8 +84,6 @@
 
 // export type AppRouter = typeof appRouter;
 
-
-
 //TODO: separate different routes to different files for better organization and maintainability
 
 import { router, procedure } from "../config/trpc"; // ✅ Import from config
@@ -128,4 +126,5 @@ export const appRouter = router({
     }),
 });
 
+//TODO: this is the same thing that has to import in the client
 export type AppRouter = typeof appRouter;
