@@ -38,8 +38,8 @@ export const authRouter = router({
   signup: procedure
     .input(z.object({ email: z.string(), password: z.string() }))
     .mutation((req) => {
-      registerUser(req.input.email, req.input.password);
       console.log(req.input);
+      return registerUser(req.input.email, req.input.password);
     }),
   //   createChat: procedure
   //     .input(z.object({ user: z.string(), message: z.string() }))
