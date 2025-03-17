@@ -34,8 +34,11 @@ export const chatRouter = router({
   sendMessage: isAuthorizedUserProcedure
     .input(z.object({ chatId: z.string().optional(), content: z.string() }))
     .mutation(async (req) => {
+      console.log("sendMessage api hited inside chat");
+
       const { chatId, content } = req.input;
-      const response = await sendMessage({ chatId, content });
+      const { user } = req.ctx;
+      const response = await sendMessage({ userId: user.id, chatId, content });
       return response;
     }),
   // .mutation(async ({ input }) => {
