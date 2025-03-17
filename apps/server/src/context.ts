@@ -15,10 +15,5 @@ export const createContext = ({ req, res }: CreateExpressContextOptions) => {
     }
   }
 
-  // verify the token here
-  // return {
-  //   isAdmin: true,
-  // };
-
   return { user };
 };

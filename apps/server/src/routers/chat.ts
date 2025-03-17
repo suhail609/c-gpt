@@ -24,8 +24,9 @@ export const chatRouter = router({
     .input(z.object({ user: z.string(), message: z.string() }))
     // .mutation((req) => req.ctx)
     .mutation((req) => {
-      req.input;
-      req.ctx;
+      console.log(req);
+      // req.input;
+      // req.ctx;
       console.log("some mutation");
     }),
   // .mutation(async ({ input }) => {
@@ -53,9 +54,4 @@ export const chatRouter = router({
     .query(async ({ input }) => {
       return await getConversationsByUser(input.user);
     }),
-
-  // protected Route
-  secretData: isAuthorizedUserProcedure.query(({ ctx }) => {
-    console.log(ctx);
-  }),
 });

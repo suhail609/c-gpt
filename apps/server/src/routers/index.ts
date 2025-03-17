@@ -9,34 +9,9 @@ import { chatRouter } from "./chat";
 import { authRouter } from "./auth.route";
 
 export const appRouter = router({
-  // conversation: procedure
-  //   .input(z.object({ user: z.string(), message: z.string() }))
-  //   .mutation(async ({ input }) => {
-  //     const { user, message } = input;
-
-  //     const response = await openai.chat.completions.create({
-  //       model: "gpt-3.5-turbo",
-  //       messages: [{ role: "user", content: message }],
-  //     });
-
-  //     const assistantReply =
-  //       response.choices[0].message?.content ||
-  //       "Sorry, I couldn't process that.";
-
-  //     await saveConversation(user, [
-  //       { role: "user", content: message },
-  //       { role: "assistant", content: assistantReply },
-  //     ]);
-
-  //     return { response: assistantReply };
-  //   }),
-
-  getConversations: procedure
-    // .input(z.object({ user: z.string() }))
-    .mutation(async ({ input }) => {
-      console.log("get conversations api hited");
-      // return await getConversationsByUser(input.user);
-    }),
+  test: procedure.mutation(async ({ input }) => {
+    console.log("test is working");
+  }),
 
   chat: chatRouter,
   auth: authRouter,
