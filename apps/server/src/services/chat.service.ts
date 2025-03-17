@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import openai, { runOpenAI } from "../config/openai";
 import Chat from "../models/chat.model";
 import Message from "../models/message.model";
@@ -23,14 +24,7 @@ export const sendMessage = async ({
    * save the gpt response to message collection
    */
 
-  console.log("sendMessage api hit inside chat");
-
   const assistant = await runOpenAI();
-
-  console.log("assistant");
-  console.log(assistant);
-  console.log(assistant.id);
-
   let chat;
 
   if (chatId) {
@@ -56,9 +50,6 @@ export const sendMessage = async ({
     });
   }
 
-  console.log("message content");
-  console.log(content);
-
   const message = await openai.beta.threads.messages.create(
     chat.openAIThreadId,
     {
@@ -67,23 +58,16 @@ export const sendMessage = async ({
     }
   );
 
-  console.log("message");
-  console.log(message);
-
   let run = await openai.beta.threads.runs.createAndPoll(chat.openAIThreadId, {
     assistant_id: assistant.id,
     instructions: "Please address the user as Jane Doe.",
   });
 
   if (run.status === "completed") {
-    console.log("completed");
-
     const messages = await openai.beta.threads.messages.list(run.thread_id);
 
     //@ts-ignore
     let response = messages.data[0].content[0].text;
-    console.log("response");
-    // console.log(response?.text?.value);
 
     // for (const message of messages.data.reverse()) {
     //   //@ts-ignore
@@ -100,26 +84,55 @@ export const sendMessage = async ({
     return response;
   } else {
     console.log(run);
-
-    console.log(run.status);
+    console.error(run.status);
+    throw new Error("OpenAI run failed");
   }
-
-  // const newAIMessage = await Message.create({
-  //   userId: userId,
-  //   chatId: chat._id,
-  //   content,
-  //   isAI: true,
-  // });
 };
 
 export const getUserChats = async ({ userId }: { userId: string }) => {
   /**
    * get all the chat of the user from the chat
    */
+  // const chats = await Chat.find({ userId: userId });
+  const chats = await Chat.aggregate([
+    { $match: { userId: new Types.ObjectId(userId) } },
+    {
+      $lookup: {
+        from: "messages",
+        localField: "_id",
+        foreignField: "chatId",
+        pipeline: [
+          {
+            $sort: { createdAt: -1 },
+          },
+          {
+            $limit: 1,
+          },
+          {
+            $project: {
+              content: 1,
+            },
+          },
+        ],
+        as: "lastMessage",
+      },
+    },
+    {
+      $unwind: {
+        path: "$lastMessage",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+  ]);
+  return chats;
 };
 
 export const getChatMessages = async ({ chatId }: { chatId: string }) => {
   /**
    * get all the messages of the chat with chatId
    */
+  const messages = await Message.find({ chatId: chatId }).sort({
+    createdAt: 1,
+  });
+  return messages;
 };
