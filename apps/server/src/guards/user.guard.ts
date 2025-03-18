@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { middleware, procedure } from "../config/trpc";
+import { middleware, procedure } from "../config/trpc.config";
 import { TRPCError } from "@trpc/server";
 
 // const JWT_SECRET = process.env.JWT_SECRET as string;

@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import openai, { runOpenAI } from "../config/openai";
+import openai, { runOpenAI } from "../config/openai.config";
 import Chat from "../models/chat.model";
 import Message from "../models/message.model";
 

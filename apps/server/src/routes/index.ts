@@ -1,11 +1,11 @@
-import { router, procedure } from "../config/trpc";
+import { router, procedure } from "../config/trpc.config";
 import { z } from "zod";
 import {
   saveConversation,
   getConversationsByUser,
 } from "../services/conversation.service";
-import openai from "../config/openai";
-import { chatRouter } from "./chat";
+import openai from "../config/openai.config";
+import { chatRouter } from "./chat.route";
 import { authRouter } from "./auth.route";
 
 export const appRouter = router({

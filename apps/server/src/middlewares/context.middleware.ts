@@ -1,5 +1,6 @@
 import { CreateExpressContextOptions } from "@trpc/server/adapters/express";
-import { verifyToken } from "./utils/jwt.util";
+import { verifyToken } from "../utils/jwt.util";
+// import { verifyToken } from "./utils/jwt.util";
 
 export const createContext = ({ req, res }: CreateExpressContextOptions) => {
   const authHeader = req.headers.authorization;

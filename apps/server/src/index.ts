@@ -1,12 +1,10 @@
 import express from "express";
 import cors from "cors";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
-// import { appRouter } from "./trpc/router";
-import connectDB from "./config/database";
+import connectDB from "./config/database.config";
 import dotenv from "dotenv";
-import authRoutes from "./routes/auth.routes";
-import { createContext } from "./context";
-import { appRouter } from "./routers";
+import { appRouter } from "./routes";
+import { createContext } from "./middlewares/context.middleware";
 
 dotenv.config();
 
@@ -15,7 +13,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/auth", authRoutes);
 app.use(
   "/trpc",
   createExpressMiddleware({ router: appRouter, createContext: createContext })

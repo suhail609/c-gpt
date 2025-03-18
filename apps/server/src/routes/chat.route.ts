@@ -1,11 +1,11 @@
-import { router, procedure } from "../config/trpc";
+import { router, procedure } from "../config/trpc.config";
 import { z } from "zod";
 import {
   saveConversation,
   getConversationsByUser,
 } from "../services/conversation.service";
-import openai from "../config/openai";
-import { isAuthorizedUserProcedure } from "../middleware/auth.middleware";
+import openai from "../config/openai.config";
+import { isAuthorizedUserProcedure } from "../guards/user.guard";
 import { getUserChats, sendMessage } from "../services/chat.service";
 
 /**
