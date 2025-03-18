@@ -4,6 +4,7 @@ export interface IConversation extends Document {
   user: string;
   messages: { role: "user" | "assistant"; content: string }[];
   createdAt: Date;
+  deletedAt: Date | null;
 }
 
 const ConversationSchema = new Schema<IConversation>(
@@ -15,8 +16,12 @@ const ConversationSchema = new Schema<IConversation>(
         content: { type: String, required: true },
       },
     ],
+    deletedAt: { type: Date, default: null },
   },
   { timestamps: true }
 );
 
-export default mongoose.model<IConversation>("Conversation", ConversationSchema);
+export default mongoose.model<IConversation>(
+  "Conversation",
+  ConversationSchema
+);
