@@ -67,7 +67,7 @@ export const sendMessage = async ({
     const messages = await openai.beta.threads.messages.list(run.thread_id);
 
     //@ts-ignore
-    let response = messages.data[0].content[0].text;
+    let gptResponse = messages.data[0].content[0].text;
 
     // for (const message of messages.data.reverse()) {
     //   //@ts-ignore
@@ -77,11 +77,11 @@ export const sendMessage = async ({
     const newAIMessage = await Message.create({
       userId: userId,
       chatId: chat._id,
-      content: response.value,
+      content: gptResponse.value,
       isAI: true,
     });
 
-    return response;
+    return newAIMessage;
   } else {
     console.log(run);
     console.error(run.status);
@@ -95,7 +95,7 @@ export const getUserChats = async ({ userId }: { userId: string }) => {
    */
   // const chats = await Chat.find({ userId: userId });
   const chats = await Chat.aggregate([
-    { $match: { userId: new Types.ObjectId(userId) } },
+    { $match: { userId: new Types.ObjectId(userId), deletedAt: null } },
     {
       $lookup: {
         from: "messages",
@@ -123,6 +123,14 @@ export const getUserChats = async ({ userId }: { userId: string }) => {
         preserveNullAndEmptyArrays: true,
       },
     },
+    {
+      $project: {
+        _id: 1,
+        userId: 1,
+        lastMessage: "$lastMessage.content",
+        createdAt: 1,
+      },
+    },
   ]);
   return chats;
 };
@@ -131,8 +139,10 @@ export const getChatMessages = async ({ chatId }: { chatId: string }) => {
   /**
    * get all the messages of the chat with chatId
    */
-  const messages = await Message.find({ chatId: chatId }).sort({
-    createdAt: 1,
-  });
+  const messages = await Message.find({ chatId: chatId, deletedAt: null })
+    .sort({
+      createdAt: 1,
+    })
+    .select("-deletedAt");
   return messages;
 };
