@@ -17,7 +17,13 @@ const SignIn = () => {
     e.preventDefault();
     try {
       const data = await mutation.mutate({ email, password });
-      dispatch(setAuthState({ isAuthenticated: true, user: { email: email } }));
+      dispatch(
+        setAuthState({
+          isAuthenticated: true,
+          user: { email: email },
+          token: data,
+        })
+      );
       router.push("/chat");
     } catch (error) {
       console.error("Error signing in:", error);

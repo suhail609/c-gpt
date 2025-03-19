@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { FiSend } from "react-icons/fi";
 import Message from "./Message";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 const Chat = (props: any) => {
   const { handleSendMessage } = props;
@@ -8,9 +10,13 @@ const Chat = (props: any) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showEmptyChat, setShowEmptyChat] = useState(true);
-  const [messages, setMessages] = useState<any[]>([]);
   const [messageContent, setMessageContent] = useState("");
   const bottomOfChatRef = useRef<HTMLDivElement>(null);
+
+  const { messages } = useSelector((state: RootState) => state.chatMessages);
+  const { selectedChatId } = useSelector(
+    (state: RootState) => state.chatHistory
+  );
 
   useEffect(() => {
     if (bottomOfChatRef.current) {
@@ -30,13 +36,16 @@ const Chat = (props: any) => {
     }
 
     setIsLoading(true);
+    // console.log("messageContent");
+    // console.log(messageContent);
+    handleSendMessage({ content: messageContent, chatId: selectedChatId });
 
     // Add the message to the messages
-    setMessages([
-      ...messages,
-      { content: messageContent, isAI: false },
-      { content: null, isAI: true },
-    ]);
+    // setMessages([
+    //   ...messages,
+    //   { content: messageContent, isAI: false },
+    //   { content: null, isAI: true },
+    // ]);
 
     // const gptResponse = await handleSendMessage();
 

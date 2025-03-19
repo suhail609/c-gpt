@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 import openai, { runOpenAI } from "../config/openai.config";
 import Chat from "../models/chat.model";
-import Message from "../models/message.model";
+import Message, { IMessage } from "../models/message.model";
 
 export const sendMessage = async ({
   userId,
@@ -11,7 +11,7 @@ export const sendMessage = async ({
   userId: string;
   chatId?: string;
   content: string;
-}) => {
+}): Promise<IMessage> => {
   /**
    * if chatId find the chat get the openAi thread from it
    * save user message
@@ -143,7 +143,11 @@ export const getUserChats = async ({ userId }: { userId: string }) => {
   return chats;
 };
 
-export const getChatMessages = async ({ chatId }: { chatId: string }) => {
+export const getChatMessages = async ({
+  chatId,
+}: {
+  chatId: string;
+}): Promise<IMessage[]> => {
   /**
    * get all the messages of the chat with chatId
    */

@@ -7,6 +7,7 @@ export interface AuthState {
 }
 
 const initialState: AuthState = {
+  //TODO: tokens to be saved in cookie
   isAuthenticated: false,
   user: null,
   token: null,
@@ -26,6 +27,7 @@ const authSlice = createSlice({
     ) => {
       state.isAuthenticated = action.payload.isAuthenticated;
       state.user = action.payload.user;
+      state.token = action.payload.token;
     },
   },
 });
