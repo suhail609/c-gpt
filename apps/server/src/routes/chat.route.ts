@@ -1,12 +1,11 @@
-import { router, procedure } from "../config/trpc.config";
+import { router } from "../config/trpc.config";
 import { z } from "zod";
-import {
-  saveConversation,
-  getConversationsByUser,
-} from "../services/conversation.service";
-import openai from "../config/openai.config";
 import { isAuthorizedUserProcedure } from "../guards/user.guard";
-import { getUserChats, sendMessage } from "../services/chat.service";
+import {
+  getUserChats,
+  sendMessage,
+  getChatMessages,
+} from "../services/chat.service";
 
 /**
  * PROCEDURES:
@@ -21,16 +20,17 @@ import { getUserChats, sendMessage } from "../services/chat.service";
  */
 
 export const chatRouter = router({
-  createChat: isAuthorizedUserProcedure
-    .input(z.object({ user: z.string(), message: z.string() }))
-    // .mutation((req) => req.ctx)
-    .mutation((req) => {
-      /**
-       * create a new entry to chat collection with userId and message
-       * ask chatgpt for the response
-       * save the response to the collection
-       */
-    }),
+  // createChat: isAuthorizedUserProcedure
+  //   .input(z.object({ user: z.string(), message: z.string() }))
+  //   // .mutation((req) => req.ctx)
+  //   .mutation((req) => {
+  //     /**
+  //      * create a new entry to chat collection with userId and message
+  //      * ask chatgpt for the response
+  //      * save the response to the collection
+  //      */
+  //   }),
+
   sendMessage: isAuthorizedUserProcedure
     .input(z.object({ chatId: z.string().optional(), content: z.string() }))
     .mutation(async (req) => {
@@ -41,25 +41,6 @@ export const chatRouter = router({
       const response = await sendMessage({ userId: user.id, chatId, content });
       return response;
     }),
-  // .mutation(async ({ input }) => {
-  //   const { user, message } = input;
-
-  //   const response = await openai.chat.completions.create({
-  //     model: "gpt-3.5-turbo",
-  //     messages: [{ role: "user", content: message }],
-  //   });
-
-  //   const assistantReply =
-  //     response.choices[0].message?.content ||
-  //     "Sorry, I couldn't process that.";
-
-  //   await saveConversation(user, [
-  //     { role: "user", content: message },
-  //     { role: "assistant", content: assistantReply },
-  //   ]);
-
-  //   return { response: assistantReply };
-  // }),
 
   getUserChats: isAuthorizedUserProcedure.query(async (req) => {
     const { id } = req.ctx.user;
@@ -68,11 +49,9 @@ export const chatRouter = router({
 
   getChatMessages: isAuthorizedUserProcedure
     .input(z.object({ chatId: z.string() }))
-    .query(async (req) => {}),
-
-  getChat: isAuthorizedUserProcedure
-    .input(z.object({ user: z.string() }))
-    .query(async ({ input }) => {
-      return await getConversationsByUser(input.user);
+    .query(async (req) => {
+      const { chatId } = req.input;
+      const response = await getChatMessages({ chatId });
+      return response;
     }),
 });
