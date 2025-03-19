@@ -6,7 +6,7 @@ import { trpc } from "../../lib/trpc";
 import { RootState } from "../../redux/store";
 import Sidebar from "./Sidebar";
 import Chat from "./Chat";
-import { setSelectedChat } from "../../redux/chatHistorySlice";
+import { setChats, setSelectedChat } from "../../redux/chatHistorySlice";
 import { addMessage, setMessages } from "../../redux/chatMessageSlice";
 
 import { useRouter } from "next/navigation";
@@ -16,23 +16,23 @@ const ChatPage = () => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const router = useRouter();
 
-  // const { selectedChatId } = useSelector(
-  //   (state: RootState) => state.chatHistory
-  // );
-  // //   const { data: chats } = trpc.chat.getUserChats.query();
+  useEffect(() => {
+    const fetchChats = async () => {
+      try {
+        const response = await trpc.chat.getUserChats.query();
+        //TODO: type error here
+        const chats = response.map((chat) => ({
+          id: chat._id || "",
+          title: chat.lastMessage || "",
+        }));
+        dispatch(setChats(chats));
+      } catch (error) {
+        console.error("Error fetching chats:", error);
+      }
+    };
 
-  // const test = async () => {
-  //   console.log("insde test");
-
-  //   const DDS = await trpc.chat.sendMessage.mutate({
-  //     // chatId: chatId,
-  //     content: "tell me back hello world",
-  //   });
-
-  //   console.log("test is working", DDS);
-  // };
-
-  // test();
+    fetchChats();
+  }, [dispatch]);
 
   const sendMessage = async ({
     chatId,
