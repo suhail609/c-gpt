@@ -94,7 +94,15 @@ export const getUserChats = async ({ userId }: { userId: string }) => {
    * get all the chat of the user from the chat
    */
   // const chats = await Chat.find({ userId: userId });
-  const chats = await Chat.aggregate([
+
+  type UserChat = {
+    _id: string;
+    userId: string;
+    createdAt: string;
+    lastMessage?: string;
+  };
+
+  const chats: UserChat[] | [] = await Chat.aggregate([
     { $match: { userId: new Types.ObjectId(userId), deletedAt: null } },
     {
       $lookup: {
