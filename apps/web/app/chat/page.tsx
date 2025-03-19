@@ -14,6 +14,9 @@ import { IMessage } from "../../../server/src/models/message.model";
 const ChatPage = () => {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { selectedChatId } = useSelector(
+    (state: RootState) => state.chatHistory
+  );
   const router = useRouter();
 
   useEffect(() => {
@@ -33,6 +36,28 @@ const ChatPage = () => {
 
     fetchChats();
   }, [dispatch]);
+
+  useEffect(() => {
+    const fetchSelectedChatMessages = async () => {
+      try {
+        if (selectedChatId) {
+          const response = await trpc.chat.getChatMessages.query({
+            chatId: selectedChatId,
+          });
+          const messages = response.map((message) => ({
+            //@ts-ignore
+            content: message.content || "",
+            //@ts-ignore
+            isAI: message.isAI || false,
+          }));
+          dispatch(setMessages(messages));
+        }
+      } catch (error) {
+        console.error("Error fetching chat messages:", error);
+      }
+    };
+    fetchSelectedChatMessages();
+  }, [selectedChatId, dispatch]);
 
   const sendMessage = async ({
     chatId,

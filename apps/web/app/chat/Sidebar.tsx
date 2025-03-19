@@ -7,11 +7,17 @@ import {
 } from "react-icons/ai";
 import { FiMessageSquare } from "react-icons/fi";
 import { MdLogout } from "react-icons/md";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import { setSelectedChat } from "../../redux/chatHistorySlice";
 
 const Sidebar = () => {
   const { chats } = useSelector((state: RootState) => state.chatHistory);
+  const dispatch = useDispatch();
+
+  const handleSelectChat = (selectedChatId: string) => {
+    dispatch(setSelectedChat(selectedChatId));
+  };
 
   return (
     <div className="scrollbar-trigger flex h-full w-full flex-1 items-start border-white/20">
@@ -24,7 +30,9 @@ const Sidebar = () => {
           <div className="flex flex-col gap-2 pb-2 text-gray-100 text-sm">
             {chats.map((chat, index) => (
               <a
+                onClick={() => handleSelectChat(chat.id)}
                 key={index}
+                //TODO: highlight if this is the selected chat
                 className="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all hover:pr-4 group"
               >
                 <FiMessageSquare className="h-4 w-4" />

@@ -24,6 +24,10 @@ const Chat = (props: any) => {
     }
   }, [messages]);
 
+  useEffect(() => {
+    setShowEmptyChat(false);
+  }, [selectedChatId]);
+
   const sendMessage = async (e: any) => {
     e.preventDefault();
 
