@@ -1,10 +1,6 @@
 import jwt from "jsonwebtoken";
+import { JWT_SECRET } from "../config/env.config";
 import { IUser } from "../models/user.model";
-import dotenv from "dotenv";
-//TODO: put env configurations to separate fi
-dotenv.config();
-
-const JWT_SECRET = process.env.JWT_SECRET as string;
 
 export const generateToken = (user: IUser) => {
   return jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {

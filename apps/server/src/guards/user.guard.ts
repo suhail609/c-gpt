@@ -1,5 +1,5 @@
-import { middleware, procedure } from "../config/trpc.config";
 import { TRPCError } from "@trpc/server";
+import { middleware, procedure } from "../config/trpc.config";
 
 const isAuthorizedUser = middleware(({ ctx, next }) => {
   if (!ctx.user?.id) {

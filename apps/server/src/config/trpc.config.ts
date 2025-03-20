@@ -1,5 +1,4 @@
 import { inferAsyncReturnType, initTRPC } from "@trpc/server";
-import { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 import { createContext } from "../middlewares/context.middleware";
 
 // import { createContext } from "../context";
