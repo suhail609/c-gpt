@@ -1,10 +1,10 @@
-import { router } from "../config/trpc.config";
 import { z } from "zod";
+import { router } from "../config/trpc.config";
 import { isAuthorizedUserProcedure } from "../guards/user.guard";
 import {
+  getChatMessages,
   getUserChats,
   sendMessage,
-  getChatMessages,
 } from "../services/chat.service";
 
 /**

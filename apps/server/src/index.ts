@@ -1,10 +1,10 @@
-import express from "express";
-import cors from "cors";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
+import cors from "cors";
+import express from "express";
 import connectDB from "./config/database.config";
-import { appRouter } from "./routes";
-import { createContext } from "./middlewares/context.middleware";
 import { SERVER_PORT } from "./config/env.config";
+import { createContext } from "./middlewares/context.middleware";
+import { appRouter } from "./routes";
 
 const app = express();
 

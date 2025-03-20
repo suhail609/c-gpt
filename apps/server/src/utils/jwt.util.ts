@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import { IUser } from "../models/user.model";
 import { JWT_SECRET } from "../config/env.config";
+import { IUser } from "../models/user.model";
 
 export const generateToken = (user: IUser) => {
   return jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {

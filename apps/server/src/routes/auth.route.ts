@@ -1,5 +1,5 @@
-import { router, procedure } from "../config/trpc.config";
 import { z } from "zod";
+import { procedure, router } from "../config/trpc.config";
 import { loginUser, registerUser } from "../services/auth.service";
 
 /**

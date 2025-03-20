@@ -1,6 +1,6 @@
-import { router, procedure } from "../config/trpc.config";
-import { chatRouter } from "./chat.route";
+import { router } from "../config/trpc.config";
 import { authRouter } from "./auth.route";
+import { chatRouter } from "./chat.route";
 
 export const appRouter = router({
   chat: chatRouter,
