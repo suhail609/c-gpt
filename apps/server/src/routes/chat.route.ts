@@ -20,17 +20,6 @@ import {
  */
 
 export const chatRouter = router({
-  // createChat: isAuthorizedUserProcedure
-  //   .input(z.object({ user: z.string(), message: z.string() }))
-  //   // .mutation((req) => req.ctx)
-  //   .mutation((req) => {
-  //     /**
-  //      * create a new entry to chat collection with userId and message
-  //      * ask chatgpt for the response
-  //      * save the response to the collection
-  //      */
-  //   }),
-
   sendMessage: isAuthorizedUserProcedure
     .input(z.object({ chatId: z.string().optional(), content: z.string() }))
     .mutation(async (req) => {

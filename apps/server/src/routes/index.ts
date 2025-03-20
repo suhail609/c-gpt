@@ -3,15 +3,11 @@ import { chatRouter } from "./chat.route";
 import { authRouter } from "./auth.route";
 
 export const appRouter = router({
-  test: procedure.mutation(async ({ input }) => {
-    console.log("test is working");
-  }),
-
   chat: chatRouter,
   auth: authRouter,
 });
 
-//TODO: this is the same thing that has to import in the client
+//NOTE: this is the same thing that has to import in the client
 export type AppRouter = typeof appRouter;
 
 /*

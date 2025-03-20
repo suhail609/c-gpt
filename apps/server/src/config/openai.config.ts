@@ -1,12 +1,8 @@
 import { OpenAI } from "openai";
-import dotenv from "dotenv";
-
-dotenv.config();
-
-//TODO: bring all env file to one index file and export from there
+import { OPENAI_API_KEY } from "./env.config";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: OPENAI_API_KEY,
 });
 
 export async function runOpenAI() {
