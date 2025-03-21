@@ -1,16 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { trpc } from "../../lib/trpc";
-import { RootState } from "../../redux/store";
-import Sidebar from "./Sidebar";
-import Chat from "./Chat";
-import { setChats, setSelectedChat } from "../../redux/chatHistorySlice";
+import { setChats } from "../../redux/chatHistorySlice";
 import { addMessage, setMessages } from "../../redux/chatMessageSlice";
+import { RootState } from "../../redux/store";
+import Chat from "./Chat";
+import Sidebar from "./Sidebar";
 
 import { useRouter } from "next/navigation";
-import { IMessage } from "../../../server/src/models/message.model";
 const ChatPage = () => {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
@@ -114,10 +113,11 @@ const ChatPage = () => {
   //   }
   // }, [selectedChatId]);
 
-  if (!isAuthenticated) {
-    router.push("/signin");
-    return null;
-  }
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/signin");
+    }
+  }, [isAuthenticated, router]);
 
   return (
     <>
