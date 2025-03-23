@@ -19,13 +19,11 @@ export const authRouter = router({
     .input(z.object({ email: z.string(), password: z.string() }))
     .mutation((req) => {
       const { email, password } = req.input;
-      console.log("input:", req.input);
       return loginUser(email, password);
     }),
   signup: procedure
     .input(z.object({ email: z.string(), password: z.string() }))
     .mutation((req) => {
-      console.log(req.input);
       return registerUser(req.input.email, req.input.password);
     }),
 });

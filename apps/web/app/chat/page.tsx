@@ -68,8 +68,6 @@ const ChatPage = () => {
     try {
       dispatch(addMessage({ content: content, isAI: false }));
 
-      console.log("chatId");
-      console.log({ chatId, content });
 
       const response = await trpc.chat.sendMessage.mutate({
         chatId: chatId,
