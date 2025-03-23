@@ -71,7 +71,7 @@ const Chat = (props: any) => {
   return (
     <div className="flex max-w-full flex-1 flex-col">
       <div className="relative h-full w-full transition-width flex flex-col overflow-hidden items-stretch flex-1">
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-scroll">
           <div className="react-scroll-to-bottom--css-ikyem-79elbk h-full dark:bg-gray-800">
             <div className="react-scroll-to-bottom--css-ikyem-1n7m0yu">
               {!showEmptyChat && messages.length > 0 ? (
