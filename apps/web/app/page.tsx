@@ -11,14 +11,14 @@ export default function Page() {
       title: "Sign Up",
       description: "",
       onClick: () => {
-        router.push("/signin");
+        router.push("/signup");
       },
     },
     {
       title: "Sign In",
       description: "",
       onClick: () => {
-        router.push("/signup");
+        router.push("/signin");
       },
     },
   ];
