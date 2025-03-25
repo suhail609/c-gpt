@@ -17,7 +17,7 @@ const Chat = () => {
     (state: RootState) => state.chatHistory
   );
 
-  const { sendMessage } = useChatActions();
+  const { sendMessage, getChatMessages } = useChatActions();
 
   useEffect(() => {
     if (bottomOfChatRef.current) {
@@ -26,8 +26,11 @@ const Chat = () => {
   }, [messages]);
 
   useEffect(() => {
-    setShowEmptyChat(false);
-  }, [selectedChatId]);
+    if (selectedChatId) {
+      setShowEmptyChat(false);
+      getChatMessages({ chatId: selectedChatId });
+    }
+  }, [selectedChatId, getChatMessages]);
 
   const handleSendMessage = async (e: any) => {
     e.preventDefault();

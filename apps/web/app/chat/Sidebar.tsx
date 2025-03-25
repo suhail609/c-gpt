@@ -49,7 +49,7 @@ const Sidebar = () => {
                 <div className="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative">
                   {chat.title}
                   <div
-                    className={`absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32] ${chat.id === selectedChatId ? "from-[#2A2B32]" : ""}`}
+                    className={`absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l  group-hover:from-[#2A2B32] ${chat.id === selectedChatId ? "from-[#2A2B32]" : ""}`}
                   ></div>
                 </div>
               </a>

@@ -24,7 +24,7 @@ export default function Page() {
   ];
 
   return (
-    <main className="flex flex-col items-center justify-between min-h-screen p-24">
+    <main className="flex flex-col items-center justify-center min-h-screen p-24">
       <div className="grid mb-32 text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
         {LINKS.map(({ title, description, onClick }, index) => (
           <Card href="" key={index} title={title} onClick={onClick}>
