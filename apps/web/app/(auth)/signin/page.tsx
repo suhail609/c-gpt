@@ -1,32 +1,22 @@
 "use client";
 
-import { useState } from "react";
-import { trpc } from "../../../lib/trpc";
-import { useDispatch } from "react-redux";
-import { setAuthState } from "../../../redux/authSlice";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useAuthActions } from "../../../redux/auth/authActions";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const dispatch = useDispatch();
+  const { signin } = useAuthActions();
   const router = useRouter();
-  const mutation = trpc.auth.signin;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const data = await mutation.mutate({ email, password });
-      dispatch(
-        setAuthState({
-          isAuthenticated: true,
-          user: { email: email },
-          token: data,
-        })
-      );
+      await signin({ email, password });
       router.push("/chat");
     } catch (error) {
-      console.error("Error signing in:", error);
+      console.error(error);
     }
   };
 

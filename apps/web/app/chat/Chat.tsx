@@ -3,10 +3,9 @@ import { FiSend } from "react-icons/fi";
 import Message from "./Message";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import { useChatActions } from "../../redux/chat/chatActions";
 
-const Chat = (props: any) => {
-  const { handleSendMessage } = props;
-
+const Chat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showEmptyChat, setShowEmptyChat] = useState(true);
@@ -18,6 +17,8 @@ const Chat = (props: any) => {
     (state: RootState) => state.chatHistory
   );
 
+  const { sendMessage, getChatMessages } = useChatActions();
+
   useEffect(() => {
     if (bottomOfChatRef.current) {
       bottomOfChatRef.current.scrollIntoView({ behavior: "smooth" });
@@ -25,10 +26,13 @@ const Chat = (props: any) => {
   }, [messages]);
 
   useEffect(() => {
-    setShowEmptyChat(false);
-  }, [selectedChatId]);
+    if (selectedChatId) {
+      setShowEmptyChat(false);
+      getChatMessages({ chatId: selectedChatId });
+    }
+  }, [selectedChatId, getChatMessages]);
 
-  const sendMessage = async (e: any) => {
+  const handleSendMessage = async (e: any) => {
     e.preventDefault();
 
     // Don't send empty messages
@@ -40,30 +44,25 @@ const Chat = (props: any) => {
     }
 
     setIsLoading(true);
-    // console.log("messageContent");
-    // console.log(messageContent);
-    handleSendMessage({ content: messageContent, chatId: selectedChatId });
 
-    // Add the message to the messages
-    // setMessages([
-    //   ...messages,
-    //   { content: messageContent, isAI: false },
-    //   { content: null, isAI: true },
-    // ]);
-
-    // const gptResponse = await handleSendMessage();
-
-    // setMessages([...messages, { content: gptResponse.content, isAI: true }]);
-
-    // Clear the message & remove empty chat
-    setMessageContent("");
-    setShowEmptyChat(false);
+    try {
+      if (selectedChatId)
+        sendMessage({ content: messageContent, chatId: selectedChatId });
+      else sendMessage({ content: messageContent });
+      setMessageContent("");
+    } catch (error) {
+      console.error(error);
+      setErrorMessage("Failed to send message. Please try again.");
+    } finally {
+      setIsLoading(false);
+      setShowEmptyChat(false);
+    }
   };
 
   const handleKeypress = (e: any) => {
     // It's triggers by pressing the enter key
     if (e.keyCode == 13 && !e.shiftKey) {
-      sendMessage(e);
+      handleSendMessage(e);
       e.preventDefault();
     }
   };
@@ -122,7 +121,7 @@ const Chat = (props: any) => {
                 ></textarea>
                 <button
                   disabled={isLoading || messageContent?.length === 0}
-                  onClick={sendMessage}
+                  onClick={handleSendMessage}
                   className="absolute p-1 rounded-md bottom-1.5 md:bottom-2.5 bg-transparent disabled:bg-gray-500 right-1 md:right-2 disabled:opacity-40"
                 >
                   <FiSend className="h-4 w-4 mr-1 text-white " />
