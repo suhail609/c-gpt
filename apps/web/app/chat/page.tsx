@@ -16,7 +16,7 @@ const ChatPage = () => {
     if (!isAuthenticated) {
       router.push("/signin");
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated]);
 
   return (
     <>

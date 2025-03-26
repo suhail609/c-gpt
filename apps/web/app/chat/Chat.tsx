@@ -31,7 +31,7 @@ const Chat = () => {
       setShowEmptyChat(false);
       getChatMessages({ chatId: selectedChatId });
     }
-  }, [selectedChatId, getChatMessages]);
+  }, [selectedChatId]);
 
   const handleSendMessage = async (e: any) => {
     e.preventDefault();
@@ -55,6 +55,7 @@ const Chat = () => {
       console.error(error);
       setErrorMessage("Failed to send message. Please try again.");
     } finally {
+      //TODO: manage this with redux
       setIsLoading(false);
       setShowEmptyChat(false);
     }

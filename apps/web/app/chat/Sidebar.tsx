@@ -33,7 +33,7 @@ const Sidebar = () => {
     } catch (error) {
       console.error(error);
     }
-  }, [selectedChatId, getAllChats]);
+  }, [selectedChatId]);
 
   return (
     <div className="scrollbar-trigger flex h-full w-full flex-1 items-start border-white/20">
