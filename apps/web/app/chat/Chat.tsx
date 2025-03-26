@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FiSend } from "react-icons/fi";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import Message from "./Message";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
@@ -124,7 +125,11 @@ const Chat = () => {
                   onClick={handleSendMessage}
                   className="absolute p-1 rounded-md bottom-1.5 md:bottom-2.5 bg-transparent disabled:bg-gray-500 right-1 md:right-2 disabled:opacity-40"
                 >
-                  <FiSend className="h-4 w-4 mr-1 text-white " />
+                  {isLoading ? (
+                    <AiOutlineLoading3Quarters className="h-4 w-4 text-white animate-spin" />
+                  ) : (
+                    <FiSend className="h-4 w-4 mr-1 text-white " />
+                  )}
                 </button>
               </div>
             </div>
