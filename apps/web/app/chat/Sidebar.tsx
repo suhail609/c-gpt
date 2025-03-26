@@ -16,10 +16,15 @@ const Sidebar = () => {
     (state: RootState) => state.chatHistory
   );
 
-  const { getAllChats, selectChat } = useChatActions();
+  const { getAllChats, selectChat, clearSelectedChatAndMessages } =
+    useChatActions();
 
   const handleSelectChat = (selectedChatId: string) => {
     selectChat({ selectedChatId });
+  };
+
+  const handleNewChatClick = () => {
+    clearSelectedChatAndMessages();
   };
 
   useEffect(() => {
@@ -33,7 +38,10 @@ const Sidebar = () => {
   return (
     <div className="scrollbar-trigger flex h-full w-full flex-1 items-start border-white/20">
       <nav className="flex h-full flex-1 flex-col space-y-1 p-2">
-        <a className="flex py-3 px-3 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-white cursor-pointer text-sm mb-1 flex-shrink-0 border border-white/20">
+        <a
+          onClick={handleNewChatClick}
+          className="flex py-3 px-3 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-white cursor-pointer text-sm mb-1 flex-shrink-0 border border-white/20"
+        >
           <AiOutlinePlus className="h-4 w-4" />
           New chat
         </a>

@@ -28,8 +28,12 @@ const chatHistorySlice = createSlice({
     setSelectedChat: (state, action: PayloadAction<string>) => {
       state.selectedChatId = action.payload;
     },
+    clearChatSelection: (state) => {
+      state.selectedChatId = null;
+    },
   },
 });
 
-export const { setChats, addChat, setSelectedChat } = chatHistorySlice.actions;
+export const { setChats, addChat, setSelectedChat, clearChatSelection } =
+  chatHistorySlice.actions;
 export default chatHistorySlice.reducer;

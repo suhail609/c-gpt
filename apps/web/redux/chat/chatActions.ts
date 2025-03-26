@@ -1,7 +1,11 @@
 import { useDispatch } from "react-redux";
 import { trpc } from "../../lib/trpc";
-import { setChats, setSelectedChat } from "./chatHistorySlice";
-import { addMessage, setMessages } from "./chatMessageSlice";
+import {
+  setChats,
+  setSelectedChat,
+  clearChatSelection,
+} from "./chatHistorySlice";
+import { addMessage, setMessages, clearMessages } from "./chatMessageSlice";
 
 export const useChatActions = () => {
   const dispatch = useDispatch();
@@ -68,5 +72,16 @@ export const useChatActions = () => {
     dispatch(setSelectedChat(selectedChatId));
   };
 
-  return { getAllChats, getChatMessages, sendMessage, selectChat };
+  const clearSelectedChatAndMessages = () => {
+    dispatch(clearChatSelection());
+    dispatch(clearMessages());
+  };
+
+  return {
+    getAllChats,
+    getChatMessages,
+    sendMessage,
+    selectChat,
+    clearSelectedChatAndMessages,
+  };
 };
