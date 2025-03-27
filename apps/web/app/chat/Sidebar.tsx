@@ -10,6 +10,7 @@ import { MdLogout } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { useChatActions } from "../../redux/chat/chatActions";
 import { RootState } from "../../redux/store";
+import { useAuthActions } from "../../redux/auth/authActions";
 
 const Sidebar = () => {
   const { chats, selectedChatId } = useSelector(
@@ -19,12 +20,18 @@ const Sidebar = () => {
   const { getAllChats, selectChat, clearSelectedChatAndMessages } =
     useChatActions();
 
+  const { signout } = useAuthActions();
+
   const handleSelectChat = (selectedChatId: string) => {
     selectChat({ selectedChatId });
   };
 
   const handleNewChatClick = () => {
     clearSelectedChatAndMessages();
+  };
+
+  const handleSignoutClick = () => {
+    signout();
   };
 
   useEffect(() => {
@@ -76,7 +83,10 @@ const Sidebar = () => {
           <AiOutlineSetting className="h-4 w-4" />
           Settings
         </a>
-        <a className="flex py-3 px-3 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-white cursor-pointer text-sm">
+        <a
+          onClick={handleSignoutClick}
+          className="flex py-3 px-3 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-white cursor-pointer text-sm"
+        >
           <MdLogout className="h-4 w-4" />
           Log out
         </a>
