@@ -9,10 +9,12 @@ interface Message {
 
 export interface ChatMessagesState {
   messages: Message[];
+  isMessagesLoading: boolean;
 }
 
 const initialState: ChatMessagesState = {
   messages: [],
+  isMessagesLoading: false,
 };
 
 const chatMessagesSlice = createSlice({
@@ -28,9 +30,12 @@ const chatMessagesSlice = createSlice({
     clearMessages: (state) => {
       state.messages = [];
     },
+    setMessagesLoading: (state, action: PayloadAction<boolean>) => {
+      state.isMessagesLoading = action.payload;
+    },
   },
 });
 
-export const { setMessages, addMessage, clearMessages } =
+export const { setMessages, addMessage, clearMessages, setMessagesLoading } =
   chatMessagesSlice.actions;
 export default chatMessagesSlice.reducer;

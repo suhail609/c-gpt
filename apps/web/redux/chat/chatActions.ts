@@ -5,7 +5,12 @@ import {
   setSelectedChat,
   clearChatSelection,
 } from "./chatHistorySlice";
-import { addMessage, setMessages, clearMessages } from "./chatMessageSlice";
+import {
+  addMessage,
+  setMessages,
+  clearMessages,
+  setMessagesLoading,
+} from "./chatMessageSlice";
 
 export const useChatActions = () => {
   const dispatch = useDispatch();
@@ -25,6 +30,7 @@ export const useChatActions = () => {
 
   const getChatMessages = async ({ chatId }: { chatId: string }) => {
     try {
+      dispatch(setMessagesLoading(true));
       const response = await trpc.chat.getChatMessages.query({
         chatId: chatId,
       });
@@ -37,6 +43,8 @@ export const useChatActions = () => {
       dispatch(setMessages(messages));
     } catch (error) {
       console.error("Error fetching chat messages:", error);
+    } finally {
+      dispatch(setMessagesLoading(false));
     }
   };
 
@@ -48,6 +56,7 @@ export const useChatActions = () => {
     content: string;
   }) => {
     try {
+      dispatch(setMessagesLoading(true));
       dispatch(addMessage({ content: content, isAI: false }));
 
       const response = await trpc.chat.sendMessage.mutate({
@@ -65,6 +74,8 @@ export const useChatActions = () => {
       );
     } catch (error) {
       console.error("Error sending message:", error);
+    } finally {
+      dispatch(setMessagesLoading(false));
     }
   };
 

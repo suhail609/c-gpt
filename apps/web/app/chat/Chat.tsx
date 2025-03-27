@@ -7,13 +7,15 @@ import { RootState } from "../../redux/store";
 import { useChatActions } from "../../redux/chat/chatActions";
 
 const Chat = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showEmptyChat, setShowEmptyChat] = useState(true);
   const [messageContent, setMessageContent] = useState("");
   const bottomOfChatRef = useRef<HTMLDivElement>(null);
 
-  const { messages } = useSelector((state: RootState) => state.chatMessages);
+  const { messages, isMessagesLoading } = useSelector(
+    (state: RootState) => state.chatMessages
+  );
+
   const { selectedChatId } = useSelector(
     (state: RootState) => state.chatHistory
   );
@@ -44,8 +46,6 @@ const Chat = () => {
       setErrorMessage("");
     }
 
-    setIsLoading(true);
-
     try {
       if (selectedChatId)
         sendMessage({ content: messageContent, chatId: selectedChatId });
@@ -55,8 +55,6 @@ const Chat = () => {
       console.error(error);
       setErrorMessage("Failed to send message. Please try again.");
     } finally {
-      //TODO: manage this with redux
-      setIsLoading(false);
       setShowEmptyChat(false);
     }
   };
@@ -122,11 +120,11 @@ const Chat = () => {
                   onKeyDown={handleKeypress}
                 ></textarea>
                 <button
-                  disabled={isLoading || messageContent?.length === 0}
+                  disabled={isMessagesLoading || messageContent?.length === 0}
                   onClick={handleSendMessage}
                   className="absolute p-1 rounded-md bottom-1.5 md:bottom-2.5 bg-transparent disabled:bg-gray-500 right-1 md:right-2 disabled:opacity-40"
                 >
-                  {isLoading ? (
+                  {isMessagesLoading ? (
                     <AiOutlineLoading3Quarters className="h-4 w-4 text-white animate-spin" />
                   ) : (
                     <FiSend className="h-4 w-4 mr-1 text-white " />
