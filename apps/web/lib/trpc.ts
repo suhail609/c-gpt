@@ -1,5 +1,5 @@
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
-import { AppRouter } from "../../server/src/routes/index"; // Adjust the path to where your AppRouter is located
+import type { AppRouter } from "../../server/src/routes/index";
 import { store } from "../redux/store";
 
 const getAuthToken = () => {

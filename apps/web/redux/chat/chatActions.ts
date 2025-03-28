@@ -35,10 +35,8 @@ export const useChatActions = () => {
         chatId: chatId,
       });
       const messages = response.map((message) => ({
-        //@ts-ignore
-        content: message.content || "",
-        //@ts-ignore
-        isAI: message.isAI || false,
+        content: message.content,
+        isAI: message.isAI,
       }));
       dispatch(setMessages(messages));
     } catch (error) {
@@ -66,9 +64,7 @@ export const useChatActions = () => {
 
       dispatch(
         addMessage({
-          //@ts-ignore
           content: response.content,
-          //@ts-ignore
           isAI: response.isAI,
         })
       );

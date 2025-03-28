@@ -11,7 +11,7 @@ export const sendMessage = async ({
   userId: string;
   chatId?: string;
   content: string;
-}): Promise<IMessage> => {
+}) => {
   /**
    * if chatId find the chat get the openAi thread from it
    * save user message
@@ -74,14 +74,21 @@ export const sendMessage = async ({
     //   console.log(`${message.role} > ${message.content[0].text.value}`);
     // }
 
-    const newAIMessage = await Message.create({
+    const newAIMessage = await new Message({
       userId: userId,
       chatId: chat._id,
       content: gptResponse.value,
       isAI: true,
-    });
+    }).save();
 
-    return newAIMessage;
+    return {
+      _id: newAIMessage._id.toString(),
+      userId: newAIMessage.userId.toString(),
+      chatId: newAIMessage.chatId.toString(),
+      content: newAIMessage.content,
+      isAI: newAIMessage.isAI,
+      createdAt: newAIMessage.createdAt,
+    };
   } else {
     console.log(run);
     console.error(run.status);
@@ -143,18 +150,29 @@ export const getUserChats = async ({ userId }: { userId: string }) => {
   return chats;
 };
 
-export const getChatMessages = async ({
-  chatId,
-}: {
-  chatId: string;
-}): Promise<IMessage[]> => {
+export const getChatMessages = async ({ chatId }: { chatId: string }) => {
   /**
    * get all the messages of the chat with chatId
    */
-  const messages = await Message.find({ chatId: chatId, deletedAt: null })
-    .sort({
-      createdAt: 1,
-    })
-    .select("-deletedAt");
-  return messages;
+
+  try {
+    const messages = await Message.find({ chatId: chatId, deletedAt: null })
+      .sort({
+        createdAt: 1,
+      })
+      .select("-deletedAt")
+      .lean();
+
+    return messages.map((message) => ({
+      _id: message._id.toString(),
+      userId: message.userId.toString(),
+      chatId: message.chatId.toString(),
+      content: message.content,
+      isAI: message.isAI,
+      createdAt: message.createdAt.toISOString(),
+    }));
+  } catch (error) {
+    console.error("Error fetching chat messages: ", error);
+    throw error;
+  }
 };
