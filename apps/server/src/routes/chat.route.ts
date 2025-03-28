@@ -22,6 +22,16 @@ import {
 export const chatRouter = router({
   sendMessage: isAuthorizedUserProcedure
     .input(z.object({ chatId: z.string().optional(), content: z.string() }))
+    .output(
+      z.object({
+        id: z.string(),
+        userId: z.string(),
+        chatId: z.string(),
+        content: z.string(),
+        isAI: z.boolean(),
+        createdAt: z.string(),
+      })
+    )
     .mutation(async (req) => {
       const { chatId, content } = req.input;
       const { user } = req.ctx;
@@ -29,13 +39,37 @@ export const chatRouter = router({
       return response;
     }),
 
-  getUserChats: isAuthorizedUserProcedure.query(async (req) => {
-    const { id } = req.ctx.user;
-    return getUserChats({ userId: id });
-  }),
+  getUserChats: isAuthorizedUserProcedure
+    .output(
+      z.array(
+        z.object({
+          id: z.string(),
+          userId: z.string(),
+          createdAt: z.string(),
+          lastMessage: z.string().optional(),
+        })
+      )
+    )
+    .query(async (req) => {
+      const { id } = req.ctx.user;
+      const userChats = await getUserChats({ userId: id });
+      return userChats;
+    }),
 
   getChatMessages: isAuthorizedUserProcedure
     .input(z.object({ chatId: z.string() }))
+    .output(
+      z.array(
+        z.object({
+          id: z.string(),
+          userId: z.string(),
+          chatId: z.string(),
+          content: z.string(),
+          isAI: z.boolean(),
+          createdAt: z.string(),
+        })
+      )
+    )
     .query(async (req) => {
       const { chatId } = req.input;
       const response = await getChatMessages({ chatId });

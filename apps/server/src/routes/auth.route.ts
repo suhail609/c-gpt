@@ -16,7 +16,12 @@ import { loginUser, registerUser } from "../services/auth.service";
 
 export const authRouter = router({
   signin: procedure
-    .input(z.object({ email: z.string(), password: z.string() }))
+    .input(
+      z.object({
+        email: z.string().email({ message: "Invalid Email" }),
+        password: z.string(),
+      })
+    )
     .mutation((req) => {
       const { email, password } = req.input;
       return loginUser(email, password);

@@ -82,12 +82,12 @@ export const sendMessage = async ({
     }).save();
 
     return {
-      _id: newAIMessage._id.toString(),
+      id: newAIMessage._id.toString(),
       userId: newAIMessage.userId.toString(),
       chatId: newAIMessage.chatId.toString(),
       content: newAIMessage.content,
       isAI: newAIMessage.isAI,
-      createdAt: newAIMessage.createdAt,
+      createdAt: newAIMessage.createdAt.toISOString(),
     };
   } else {
     console.log(run);
@@ -96,20 +96,24 @@ export const sendMessage = async ({
   }
 };
 
-export const getUserChats = async ({ userId }: { userId: string }) => {
+type UserChat = {
+  id: string;
+  userId: string;
+  createdAt: string;
+  lastMessage?: string;
+};
+
+export const getUserChats = async ({
+  userId,
+}: {
+  userId: string;
+}): Promise<UserChat[]> => {
   /**
    * get all the chat of the user from the chat
    */
   // const chats = await Chat.find({ userId: userId });
 
-  type UserChat = {
-    _id: string;
-    userId: string;
-    createdAt: string;
-    lastMessage?: string;
-  };
-
-  const chats: UserChat[] | [] = await Chat.aggregate([
+  const chats: UserChat[] = await Chat.aggregate([
     { $match: { userId: new Types.ObjectId(userId), deletedAt: null } },
     {
       $lookup: {
@@ -140,13 +144,14 @@ export const getUserChats = async ({ userId }: { userId: string }) => {
     },
     {
       $project: {
-        _id: 1,
-        userId: 1,
-        lastMessage: "$lastMessage.content",
+        id: { $toString: "$_id" },
+        userId: { $toString: "$userId" },
+        lastMessage: { $ifNull: ["$lastMessage.content", null] },
         createdAt: 1,
       },
     },
   ]);
+
   return chats;
 };
 
@@ -164,7 +169,7 @@ export const getChatMessages = async ({ chatId }: { chatId: string }) => {
       .lean();
 
     return messages.map((message) => ({
-      _id: message._id.toString(),
+      id: message._id.toString(),
       userId: message.userId.toString(),
       chatId: message.chatId.toString(),
       content: message.content,
