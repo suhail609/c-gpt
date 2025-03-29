@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface Chat {
   id: string;
-  title: string;
+  title?: string;
 }
 
 export interface ChatHistoryState {

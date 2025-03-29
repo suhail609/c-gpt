@@ -147,7 +147,7 @@ export const getUserChats = async ({
         id: { $toString: "$_id" },
         userId: { $toString: "$userId" },
         lastMessage: { $ifNull: ["$lastMessage.content", null] },
-        createdAt: 1,
+        createdAt: { $toString: "$createdAt" },
       },
     },
   ]);

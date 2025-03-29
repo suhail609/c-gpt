@@ -19,8 +19,8 @@ export const useChatActions = () => {
     try {
       const response = await trpc.chat.getUserChats.query();
       const chats = response.map((chat) => ({
-        id: chat._id || "",
-        title: chat.lastMessage || "",
+        id: chat.id,
+        title: chat.lastMessage,
       }));
       dispatch(setChats(chats));
     } catch (error) {
